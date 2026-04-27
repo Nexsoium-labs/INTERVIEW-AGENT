@@ -1,0 +1,59 @@
+# --- Environments & Secrets ---
+.env
+.env.*
+!.env.example
+secrets.json
+
+# --- Python / Agentic Stack ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+*.db
+*.sqlite
+*.sqlite3
+# uv is the 2026 standard for Python speed
+uv.lock
+.python-version
+
+# --- Node / Frontend (Next.js) ---
+node_modules/
+.next/
+out/
+build/
+.vercel
+*.tsbuildinfo
+
+# --- AI & Vector Databases ---
+# Prevents committing massive local vector store data
+chroma_db/
+vector_store/
+qdrant_data/
+*.log
+# If you download local LLMs for testing on your M5 Max
+models/
+*.gguf
+*.bin
+
+# --- OS Specific (Crucial for your M5 Max) ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+!src-tauri/icons/
+!src-tauri/icons/**
+._*
+
+# --- Rust / Tauri ---
+target/
+src-tauri/binaries/data/
+
+# --- IDEs & Tools ---
+.vscode/
+.idea/
+*.swp
