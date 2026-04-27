@@ -30,6 +30,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ingestTelemetry } from "@/lib/api";
+import { isTauri } from "@/lib/platform";
 import {
   Activity,
   Cpu,
@@ -176,6 +177,7 @@ export function BiometricSentinel({
   const [bpmHistory, setBpmHistory] = useState<number[]>([]);
   const [transmitStatus, setTransmitStatus] = useState<TransmitStatus>("idle");
   const [txCount, setTxCount] = useState(0);
+  const [userConsented, setUserConsented] = useState(false);
 
   // ── Token resolution ────────────────────────────────────────────────────────
 
@@ -229,6 +231,8 @@ export function BiometricSentinel({
   // ── WebRTC stream setup ─────────────────────────────────────────────────────
 
   useEffect(() => {
+    if (!isTauri() && !userConsented) return;
+
     let cancelled = false;
 
     async function startStream() {
@@ -266,7 +270,7 @@ export function BiometricSentinel({
       cancelled = true;
       streamRef.current?.getTracks().forEach((t) => t.stop());
     };
-  }, []);
+  }, [userConsented]);
 
   // ── Canvas extraction + BPM sampling ───────────────────────────────────────
 
@@ -324,6 +328,33 @@ export function BiometricSentinel({
       : "text-rose-400";
 
   // ── Offline / Error state ───────────────────────────────────────────────────
+
+  if (!isTauri() && !userConsented) {
+    return (
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-cyan-400" />
+            <span className="text-xs font-medium uppercase tracking-widest text-slate-300">
+              Biometric Sensor
+            </span>
+          </div>
+          <span className="text-[10px] uppercase tracking-widest text-slate-600">
+            awaiting consent
+          </span>
+        </div>
+        <p className="text-xs text-slate-400">
+          Camera access is required for biometric monitoring. Click below to enable.
+        </p>
+        <button
+          onClick={() => setUserConsented(true)}
+          className="w-full py-2 rounded-lg bg-cyan-600/20 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-widest hover:bg-cyan-600/30 transition-colors"
+        >
+          Enable Biometric Sensor
+        </button>
+      </div>
+    );
+  }
 
   if (permission === "denied" || permission === "error") {
     return (
