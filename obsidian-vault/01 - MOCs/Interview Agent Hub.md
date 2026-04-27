@@ -16,6 +16,7 @@ desktop deployment through ZT-ATE Sentinel Node.
 | 5 | BiometricSentinel WebRTC Component | Complete |
 | 6 | Tauri Desktop Conversion | Implemented with returning-user sidecar patch; Rust/MSVC local verification pending |
 | 7 | Sentinel Node Production Hardening | Complete |
+| 8 | Universal Core Platform Abstraction (Tauri/Browser dual-mode) | Complete |
 
 ## Architecture
 - [[02 - Architecture/ZT-ATE System Architecture]]

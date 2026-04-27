@@ -27,8 +27,9 @@ CandidateSessionPage (Client Component)
 ## Data Flow
 - `session` query param provides the session ID.
 - Candidate token is read from `localStorage("zt_candidate_token")`.
-- Session data is fetched directly from the Python sidecar through
-  `GET http://127.0.0.1:8000/api/sessions/{id}/candidate`.
+- Session data is fetched through the platform-aware API client:
+  Sentinel Node resolves to `http://127.0.0.1:8000`, Nexus Cloud resolves
+  to `NEXT_PUBLIC_API_BASE_URL` or same-origin `/api/*` routes.
 - The backend applies `sanitize_for_candidate()` before returning the snapshot.
 - Candidate UI must never call the full `/api/sessions/{id}` operator snapshot
   endpoint.
@@ -59,6 +60,17 @@ CandidateSessionPage (Client Component)
 - [x] Viewport locked to app frame.
 - [x] Anti-cheat focus-loss integrity overlay.
 - [x] Tauri kiosk window mode.
+- Platform abstraction complete: `lib/platform.ts` centralizes `isTauri()` and
+  `getApiBaseUrl()`.
+- Root Layout is now a Server Component; all client boot logic lives in
+  `app/ClientProviders.tsx`.
+- BackendGate skips sidecar polling in browser mode and marks the UI ready
+  immediately.
+- BiometricSentinel requires an explicit user gesture before camera access in
+  browser mode.
+- `setup/page.tsx` is guarded against browser access with a "Desktop Only"
+  fallback.
+- All Tauri API calls in the root boot path and setup page use dynamic imports.
 
 ## Next Actions
 1. Add first-class candidate token provisioning UX.
