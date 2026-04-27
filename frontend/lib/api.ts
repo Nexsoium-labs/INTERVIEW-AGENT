@@ -4,8 +4,9 @@ import type {
   InterviewSessionSnapshot,
   TelemetryOverlayPlane
 } from "@/lib/types";
+import { getApiBaseUrl } from "@/lib/platform";
 
-export const BACKEND_BASE = "http://127.0.0.1:8000";
+export const BACKEND_BASE = getApiBaseUrl();
 const API_BASE = `${BACKEND_BASE}/api`;
 
 async function fetchJson<T>(
