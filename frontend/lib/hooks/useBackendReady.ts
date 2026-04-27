@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const BACKEND_URL = "http://127.0.0.1:8000";
+import { getApiBaseUrl, isTauri } from "@/lib/platform";
+
 const MAX_ATTEMPTS = 40;
 const POLL_INTERVAL_MS = 500;
 
@@ -19,13 +20,19 @@ export function useBackendReady(): BackendReadyState {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isTauri() && !process.env.NEXT_PUBLIC_API_BASE_URL) {
+      setReady(true);
+      return;
+    }
+
+    const backendUrl = getApiBaseUrl();
     let cancelled = false;
     let attempt = 0;
 
     async function poll() {
       while (!cancelled && attempt < MAX_ATTEMPTS) {
         try {
-          const res = await fetch(`${BACKEND_URL}/api/health`, {
+          const res = await fetch(`${backendUrl}/api/health`, {
             signal: AbortSignal.timeout(1_000)
           });
           if (res.ok && !cancelled) {
