@@ -2,13 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { isTauri } from "@/lib/platform";
+
 export interface AntiCheatState {
   violated: boolean;
   clearViolation: () => void;
-}
-
-function isTauriContext(): boolean {
-  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 }
 
 export function useAntiCheat(): AntiCheatState {
@@ -22,7 +20,7 @@ export function useAntiCheat(): AntiCheatState {
     let unlisten: (() => void) | undefined;
     let disposed = false;
 
-    if (isTauriContext()) {
+    if (isTauri()) {
       import("@tauri-apps/api/window")
         .then(({ getCurrentWindow }) =>
           getCurrentWindow().onFocusChanged(({ payload: focused }) => {

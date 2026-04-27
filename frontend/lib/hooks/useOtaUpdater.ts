@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import { isTauri } from "@/lib/platform";
+
 export interface OtaUpdaterState {
   updateAvailable: boolean;
   updateProgress: number | null;
-}
-
-function isTauriContext(): boolean {
-  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 }
 
 export function useOtaUpdater(): OtaUpdaterState {
@@ -16,7 +14,7 @@ export function useOtaUpdater(): OtaUpdaterState {
   const [updateProgress, setUpdateProgress] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!isTauriContext()) return;
+    if (!isTauri()) return;
 
     let cancelled = false;
 
