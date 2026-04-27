@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZT-ATE Interview Nexus</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <h1>ZT-ATE Interview Nexus</h1>
+        <p class="subtitle">
+          Deterministic multi-agent interview orchestration with strict contracts, traceable decisions, and zero-trust routing.
+        </p>
+      </header>
+
+      <section class="grid">
+        <article class="card controls">
+          <h2>Session Control</h2>
+          <label for="candidateId">Candidate ID</label>
+          <input id="candidateId" value="candidate-001" />
+
+          <label for="candidateRole">Role</label>
+          <input id="candidateRole" value="Senior Platform Engineer" />
+
+          <label for="candidateLanguage">Language</label>
+          <input id="candidateLanguage" value="en" />
+
+          <button id="createSessionBtn">Create Interview Session</button>
+          <div id="sessionStatus" class="status"></div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="k">Session</div>
+              <div id="statSession" class="v">-</div>
+            </div>
+            <div class="stat">
+              <div class="k">Score</div>
+              <div id="statScore" class="v">0.00</div>
+            </div>
+            <div class="stat">
+              <div class="k">Stress</div>
+              <div id="statStress" class="v">0.00</div>
+            </div>
+            <div class="stat">
+              <div class="k">Status</div>
+              <div id="statLifecycle" class="v">idle</div>
+            </div>
+            <div class="stat">
+              <div class="k">Events</div>
+              <div id="statEvents" class="v">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">Route</div>
+              <div id="statRoute" class="v">-</div>
+            </div>
+          </div>
+          <p id="sessionMeta" class="inline-note">
+            The orchestrator is the only node allowed to route agent execution.
+          </p>
+        </article>
+
+        <article class="card event">
+          <h2>Candidate Event Ingestion</h2>
+          <label for="eventType">Event Type</label>
+          <select id="eventType">
+            <option value="candidate_message">Candidate Message</option>
+            <option value="code_delta">Code Delta</option>
+            <option value="audio_chunk">Audio Chunk</option>
+            <option value="webcam_frame">Webcam Frame</option>
+            <option value="system_signal">System Signal</option>
+          </select>
+
+          <label for="candidateMessage">Message / Audio Transcript</label>
+          <textarea id="candidateMessage">I would shard the orchestration queue and isolate failure domains before scaling worker throughput.</textarea>
+
+          <label for="codeDelta">Code Delta</label>
+          <textarea id="codeDelta">async def deploy():
+    await cluster.scale(8)</textarea>
+
+          <label for="heartRate">Heart Rate BPM</label>
+          <input id="heartRate" type="number" value="96" min="30" max="220" />
+
+          <label for="stressIndex">Stress Index (0.0-1.0)</label>
+          <input id="stressIndex" type="number" step="0.01" value="0.34" min="0" max="1" />
+
+          <label for="silenceMs">Silence ms</label>
+          <input id="silenceMs" type="number" value="0" min="0" max="60000" />
+
+          <button id="sendEventBtn" class="secondary">Run ReAct Loop</button>
+          <div id="eventStatus" class="status"></div>
+        </article>
+
+        <article class="card capture">
+          <h2>Webcam Capture</h2>
+          <video id="cameraPreview" class="camera-preview" autoplay playsinline muted></video>
+          <div class="button-row">
+            <button id="startCameraBtn">Start Camera</button>
+            <button id="captureFrameBtn" class="secondary">Send Frame</button>
+            <button id="toggleAutoCaptureBtn">Auto Capture Off</button>
+          </div>
+          <div id="captureStatus" class="status"></div>
+          <p class="inline-note">
+            Browser frames are converted into deterministic `webcam_frame` packets and enriched
+            with synthetic rPPG pulse estimates on the backend.
+          </p>
+        </article>
+
+        <article class="card traces">
+          <h2>Glass-Box Trace Stream</h2>
+          <button id="refreshTraceBtn">Refresh Trace</button>
+          <div id="traceStatus" class="status"></div>
+          <div id="traceList" class="trace-list"></div>
+        </article>
+
+        <article class="card synth">
+          <h2>Live Synthesizer</h2>
+          <label for="livePrompt">Prompt</label>
+          <textarea id="livePrompt">I am stuck on the queueing design. Give me a neutral hint without scoring me.</textarea>
+          <div class="button-row">
+            <button id="askLiveBtn">Generate Live Response</button>
+            <button id="startVoiceBtn" class="secondary">Start Voice</button>
+            <button id="stopVoiceBtn">Stop Voice</button>
+          </div>
+          <div id="liveStatus" class="status"></div>
+          <div id="liveResponseBox" class="detail-box">No live response yet.</div>
+        </article>
+
+        <article class="card governance">
+          <h2>Governance Gate</h2>
+          <label for="finalizeNote">Finalize Note</label>
+          <textarea id="finalizeNote">Freeze the interview state and generate the glass-box evidence package for human review.</textarea>
+          <button id="finalizeSessionBtn">Finalize Session</button>
+          <div id="finalizeStatus" class="status"></div>
+
+          <label for="reviewerId">Reviewer ID</label>
+          <input id="reviewerId" value="principal-reviewer" />
+
+          <label for="reviewDecision">Decision</label>
+          <select id="reviewDecision">
+            <option value="approve">approve</option>
+            <option value="reject">reject</option>
+          </select>
+
+          <label for="reviewRationale">Rationale</label>
+          <textarea id="reviewRationale">Evidence package is coherent, deterministic, and suitable for final governance sign-off.</textarea>
+          <button id="submitReviewBtn" class="secondary">Apply Human Decision</button>
+          <div id="reviewStatus" class="status"></div>
+        </article>
+
+        <article class="card observability">
+          <h2>Observability</h2>
+          <button id="refreshObservabilityBtn">Refresh Observability</button>
+          <div id="observabilityStatus" class="status"></div>
+          <div id="observabilityBox" class="detail-box">No observability snapshot yet.</div>
+        </article>
+
+        <article class="card report">
+          <h2>Glass-Box Report</h2>
+          <button id="refreshReportBtn">Refresh Report</button>
+          <div id="reportStatus" class="status"></div>
+          <div id="reportBox" class="detail-box">No report loaded.</div>
+        </article>
+
+        <article class="card a2a">
+          <h2>A2A Handshake</h2>
+          <label for="requesterAgentId">Requester Agent</label>
+          <select id="requesterAgentId">
+            <option value="orchestrator">orchestrator</option>
+            <option value="l0-router">l0-router</option>
+            <option value="live-synth">live-synth</option>
+            <option value="forensics">forensics</option>
+          </select>
+          <label for="targetAgentId">Target Agent</label>
+          <select id="targetAgentId">
+            <option value="forensics">forensics</option>
+            <option value="orchestrator">orchestrator</option>
+            <option value="live-synth">live-synth</option>
+            <option value="l0-router">l0-router</option>
+          </select>
+          <label for="requestedCapabilities">Requested Capabilities</label>
+          <input id="requestedCapabilities" value="identity-verification,lattice-signature-check" />
+          <button id="handshakeBtn" class="secondary">Run Handshake</button>
+          <div id="handshakeStatus" class="status"></div>
+          <div id="handshakeBox" class="detail-box">No handshake executed.</div>
+        </article>
+
+        <article class="card agentcards">
+          <h2>Agent Cards</h2>
+          <div id="agentCardsBox" class="detail-box">Loading signed agent cards...</div>
+        </article>
+
+        <article class="card phases">
+          <h2>Phase Registry (1-15)</h2>
+          <table class="phase-table">
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Objective</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="phaseTableBody"></tbody>
+          </table>
+
+          <hr />
+          <h2>Revision Control</h2>
+          <label for="revPhaseId">Phase ID</label>
+          <input id="revPhaseId" type="number" value="2" min="1" max="15" />
+
+          <label for="revStatus">Status</label>
+          <select id="revStatus">
+            <option value="active">active</option>
+            <option value="planned">planned</option>
+            <option value="blocked">blocked</option>
+            <option value="completed">completed</option>
+          </select>
+
+          <label for="revSummary">Change Summary</label>
+          <input id="revSummary" value="Added deterministic L0 semantic firewall gating." />
+
+          <label for="revReason">Rationale</label>
+          <textarea id="revReason">Reduced expensive model escalations by filtering silent packets and guarding against prompt injection at the perimeter.</textarea>
+
+          <button id="revisePhaseBtn">Apply Phase Revision</button>
+          <div id="phaseStatus" class="status"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
