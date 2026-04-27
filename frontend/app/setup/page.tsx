@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { appDataDir } from "@tauri-apps/api/path";
-import { Stronghold, type Client } from "@tauri-apps/plugin-stronghold";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Key, Loader2, Shield } from "lucide-react";
+
+import { isTauri } from "@/lib/platform";
 
 const VAULT_PASSPHRASE = "zt-ate-device-passphrase-v1";
 const STORE_NAME = "zt-ate-secrets";
@@ -15,15 +14,14 @@ function encodeSecret(value: string): number[] {
 }
 
 async function loadVaultClient() {
+  const { appDataDir } = await import("@tauri-apps/api/path");
+  const { Stronghold } = await import("@tauri-apps/plugin-stronghold");
+
   const vaultPath = `${await appDataDir()}/vault.hold`;
   const stronghold = await Stronghold.load(vaultPath, VAULT_PASSPHRASE);
-  let client: Client;
-
-  try {
-    client = await stronghold.loadClient(STORE_NAME);
-  } catch {
-    client = await stronghold.createClient(STORE_NAME);
-  }
+  const client = await stronghold
+    .loadClient(STORE_NAME)
+    .catch(() => stronghold.createClient(STORE_NAME));
 
   return { stronghold, client };
 }
@@ -36,6 +34,21 @@ export default function SetupPage() {
   );
   const [errMsg, setErrMsg] = useState("");
 
+  if (!isTauri()) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-[#0a0a0a]">
+        <div className="max-w-sm text-center space-y-4 px-6">
+          <Shield className="h-10 w-10 text-slate-500 mx-auto" />
+          <h2 className="text-lg font-semibold text-white">Desktop Only</h2>
+          <p className="text-sm text-slate-400">
+            First-run provisioning is only available in the Sentinel Node
+            desktop application.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   async function handleProvision() {
     if (!geminiKey.trim()) {
       setErrMsg("GEMINI_API_KEY is required.");
@@ -46,6 +59,7 @@ export default function SetupPage() {
     setErrMsg("");
 
     try {
+      const { invoke } = await import("@tauri-apps/api/core");
       const [jwtKey, opSecret] = await invoke<[string, string]>("generate_secrets");
       const { stronghold, client } = await loadVaultClient();
       const store = client.getStore();
@@ -64,7 +78,9 @@ export default function SetupPage() {
       setStatus("done");
       setTimeout(() => router.push("/"), 1_500);
     } catch (err: unknown) {
-      setErrMsg(`Provisioning failed: ${err instanceof Error ? err.message : String(err)}`);
+      setErrMsg(
+        `Provisioning failed: ${err instanceof Error ? err.message : String(err)}`
+      );
       setStatus("error");
     }
   }
@@ -86,8 +102,8 @@ export default function SetupPage() {
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
           <p className="text-xs text-slate-400 leading-relaxed">
-            Enter your Gemini API key. JWT signing secrets and the operator master secret
-            are generated locally and stored in the device vault.
+            Enter your Gemini API key. JWT signing secrets and the operator master
+            secret are generated locally and stored in the device vault.
           </p>
         </div>
 
