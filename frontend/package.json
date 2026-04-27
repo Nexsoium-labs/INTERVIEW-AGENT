@@ -1,0 +1,38 @@
+{
+  "name": "zt-ate-frontend",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "clean-dev": "rm -rf .next out && npm run tauri:dev"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "@tauri-apps/api": "^2.5.0",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-shell": "^2.2.0",
+    "@tauri-apps/plugin-stronghold": "^2.2.0",
+    "@tauri-apps/plugin-updater": "^2.10.1",
+    "lucide-react": "^1.9.0",
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.5.0",
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^4.2.4",
+    "typescript": "5.7.2"
+  }
+}
